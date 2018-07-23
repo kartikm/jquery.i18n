@@ -2,17 +2,17 @@
 	'use strict';
 
 	QUnit.module( 'jquery.i18n - $.fn.i18n Tests', {
-		setup: function () {
+		beforeEach: function () {
 			$.i18n( {
 				locale: 'localex'
 			} );
 		},
-		teardown: function () {
+		afterEach: function () {
 			$.i18n().destroy();
 		}
 	} );
 
-	QUnit.test( 'Message parse tests', 1, function ( assert ) {
+	QUnit.test( 'Message parse tests', function ( assert ) {
 		var i18n = $( document ).data( 'i18n' ),
 			$fixture = $( '#qunit-fixture' );
 		// Load messages for localex
@@ -23,7 +23,7 @@
 		assert.strictEqual( $fixture.i18n().text(), 'X', 'Content of fixture localized' );
 	} );
 
-	QUnit.test( 'Message parse HTML', 2, function ( assert ) {
+	QUnit.test( 'Message parse HTML', function ( assert ) {
 		var i18n = $( document ).data( 'i18n' ),
 			$fixture = $( '#qunit-fixture' );
 		// Load messages for localex
@@ -36,7 +36,7 @@
 		assert.strictEqual( $fixture.i18n().html(), 'X<i>Y</i>', 'Content of fixture localized with HTML as is' );
 	} );
 
-	QUnit.test( 'Message parse attrbutes', 1, function ( assert ) {
+	QUnit.test( 'Message parse attrbutes', function ( assert ) {
 		var i18n = $( document ).data( 'i18n' ),
 			$fixture = $( '#qunit-fixture' );
 		// Load messages for localex
@@ -48,17 +48,17 @@
 	} );
 
 	QUnit.module( 'jquery.i18n', {
-		setup: function () {
+		beforeEach: function () {
 			$.i18n( {
 				locale: 'en'
 			} );
 		},
-		teardown: function () {
+		afterEach: function () {
 			$.i18n().destroy();
 		}
 	} );
 
-	QUnit.test( 'Message parse tests (en)', 14, function ( assert ) {
+	QUnit.test( 'Message parse tests (en)', function ( assert ) {
 		var pluralAndGenderMessage,
 			pluralAndGenderMessageWithLessParaMS,
 			pluralAndGenderMessageWithCase,
@@ -66,13 +66,13 @@
 			pluralAndGenderMessageWithSyntaxError2,
 			i18n = $( document ).data( 'i18n' );
 
-		QUnit.stop();
+	    var done = assert.async();
 		$.when(
 			i18n.load( 'i18n/test-en.json', 'en' )
-		).then( function () {
-			QUnit.start();
+		).always( function () {
 			assert.strictEqual( i18n.locale, 'en', 'Locale is English' );
 			assert.strictEqual( $.i18n( 'message_1' ), 'ONE', 'Simple message' );
+			done();
 		} );
 		assert.strictEqual(
 			$.i18n( 'This message key does not exist' ),
@@ -150,7 +150,7 @@
 	$.when(
 		$.i18n().load( 'i18n/test-ml.json', 'ml' )
 	).then( function () {
-		QUnit.test( 'Message parse tests (ml, fr)', 8, function ( assert ) {
+		QUnit.test( 'Message parse tests (ml, fr)', function ( assert ) {
 			var i18n = $( document ).data( 'i18n' ),
 				pluralAndGenderMessage;
 			$.i18n( {
@@ -177,7 +177,7 @@
 		} );
 	} );
 
-	QUnit.test( 'Message load tests', 14, function ( assert ) {
+	QUnit.test( 'Message load tests', function ( assert ) {
 		$.i18n();
 		var i18n = $( document ).data( 'i18n' );
 		assert.strictEqual( i18n.locale, 'en', 'Locale is English - fallback locale' );
@@ -267,16 +267,16 @@
 	} );
 
 	QUnit.module( 'jquery.i18n - Fallback test', {
-		setup: function () {
+		beforeEach: function () {
 			$.i18n().destroy();
 			$.i18n();
 		},
-		teardown: function () {
+		afterEach: function () {
 			$.i18n().destroy();
 		}
 	} );
 
-	QUnit.test( 'Locale Fallback test', 7, function ( assert ) {
+	QUnit.test( 'Locale Fallback test', function ( assert ) {
 		var i18n = $( document ).data( 'i18n' );
 		i18n.locale = 'sa';
 		i18n.load( {
@@ -301,7 +301,7 @@
 			'Message is from fallback locale - Russian' );
 	} );
 
-	QUnit.test( 'Message parse plural tests for Arabic', 17, function ( assert ) {
+	QUnit.test( 'Message parse plural tests for Arabic', function ( assert ) {
 		$.i18n();
 		var i18n = $( document ).data( 'i18n' );
 		// Switch to locale locally
@@ -341,7 +341,7 @@
 			'Arabic plural test for ۰۱۲۳۴۵۶۷۸۹' );
 	} );
 
-	QUnit.test( 'Test explicit plural forms', 5, function ( assert ) {
+	QUnit.test( 'Test explicit plural forms', function ( assert ) {
 		$.i18n();
 		assert.strictEqual( $.i18n.languages[ 'default' ].convertPlural( 0, [ '0=Explicit Zero', 'Singular', 'Plural' ] ),
 			'Explicit Zero', 'Explicit Zero' );
@@ -358,7 +358,7 @@
 		assert.strictEqual( $.i18n( 'Found {{PLURAL:$1|$1 results|1=$1 result}}', 1 ), 'Found 1 result', 'Plural message with explicit plural forms, plural form contains placeholder.' );
 	} );
 
-	QUnit.test( 'Digit transform table tests', 4, function ( assert ) {
+	QUnit.test( 'Digit transform table tests', function ( assert ) {
 		$.i18n();
 		var i18n = $( document ).data( 'i18n' );
 		// Switch to locale locally
@@ -373,7 +373,7 @@
 			'Persian transform of 0123456789' );
 	} );
 
-	QUnit.test( 'Digit transform table tests', 4, function ( assert ) {
+	QUnit.test( 'Digit transform table tests', function ( assert ) {
 		$.i18n();
 		var i18n = $( document ).data( 'i18n' );
 		// Switch to locale locally
@@ -388,24 +388,24 @@
 			'Arabic transform of 0123456789' );
 	} );
 
-	QUnit.test( 'Support fallback loading from folder tests', 2, function ( assert ) {
+	QUnit.test( 'Support fallback loading from folder tests', function ( assert ) {
 		var i18n = $( document ).data( 'i18n' );
 
-		QUnit.stop();
+	    var done = assert.async();
 		$.when(
 			i18n.load( 'i18n/fallback', 'uk' )
 		).then( function () {
-			QUnit.start();
 			i18n.locale = 'uk';
 			assert.strictEqual( i18n.locale, 'uk', 'Locale is uk' );
 			assert.strictEqual( $.i18n( 'message_1' ), 'ONE',
 				'Message loaded from fallback locale English' );
+	        done();
 		} );
 	} );
 
 	function grammarTest( langCode, test ) {
 		QUnit.test( 'Grammar test for language ' + langCode, function ( assert ) {
-			QUnit.expect( test.length + 1 );
+			assert.expect( test.length + 1 );
 			var i, grammarMessage,
 				i18n = $.i18n( {
 					locale: langCode
@@ -813,7 +813,7 @@
 		grammarTest( langCode, test );
 	} );
 
-	QUnit.test( 'Bidi message arguments', 3, function ( assert ) {
+	QUnit.test( 'Bidi message arguments', function ( assert ) {
 		var i18n = $( document ).data( 'i18n' );
 		i18n.locale = 'he';
 		i18n.load( {
